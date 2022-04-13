@@ -48,13 +48,13 @@ class Trainner(object):
         input_shape = model_input_size[model_name]
         MODEL = model_api[model_name]
         
-        pretrain_weights = glob.glob(os.path.join(self.pretrain_dir, '*.h5'))        
-        weights_apth = [x for x in pretrain_weights if model_name in x][0]
         if self.pretrain_dir==None:
             base_model=MODEL(weights=None, include_top=False, input_shape=input_shape) 
         else:
+            pretrain_weights = glob.glob(os.path.join(self.pretrain_dir, '*.h5'))        
+            weights_path = [x for x in pretrain_weights if model_name in x][0]            
             try:
-                base_model=MODEL(weights=weights_apth, include_top=False, input_shape=input_shape) 
+                base_model=MODEL(weights=weights_path, include_top=False, input_shape=input_shape) 
             except:
                 base_model=MODEL(weights=None, include_top=False, input_shape=input_shape) 
         
@@ -122,7 +122,7 @@ class Trainner(object):
             os.makedirs(model_dir)
         
         dgen_tr, dgen_val = self.get_data(df, model_name)
-        model_cls_map = {v: k for k, v in gen_df.class_indices.items()}
+        model_cls_map = {v: k for k, v in dgen_tr.class_indices.items()}
         
         steps_per_epoch = dgen_tr.samples//self.batch
         steps_per_epoch_val = dgen_val.samples//self.batch
