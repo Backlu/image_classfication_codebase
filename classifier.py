@@ -44,7 +44,7 @@ class Classifier(object):
             model_path = os.path.join(self.model_dir, f'{self.model_ver}/{model_name}_{self.model_ver}_full.h5')
             model = load_model(model_path, compile=False)
             #for i in range(self.tta_n):
-            pred = model.predict(gen_df, verbose=1, workers=4, use_multiprocessing=True)
+            pred = model.predict(gen_df, verbose=1, workers=4, use_multiprocessing=False)
             #pred = model.predict(gen_df, verbose=1)
             pred_list.append(pred)
             pred_score = np.max(pred, axis=1)

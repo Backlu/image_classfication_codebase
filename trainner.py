@@ -180,7 +180,7 @@ class Trainner(object):
             callbacks.append(reduce_lr_plateau)
             
         
-        history = model.fit(dgen_tr, steps_per_epoch=steps_per_epoch, validation_steps=steps_per_epoch_val, epochs=epoch, validation_data=dgen_val, callbacks=callbacks, workers=4, use_multiprocessing=True) 
+        history = model.fit(dgen_tr, steps_per_epoch=steps_per_epoch, validation_steps=steps_per_epoch_val, epochs=epoch, validation_data=dgen_val, callbacks=callbacks, workers=4, use_multiprocessing=False) 
         model.load_weights(best_model_path)
         model.save(final_model_path)
         joblib.dump(model_cls_map, self.cls_map_path)
