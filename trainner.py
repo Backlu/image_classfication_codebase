@@ -57,7 +57,7 @@ class Trainner(object):
             base_model=MODEL(weights=None, include_top=False, input_shape=input_shape) 
         else:
             pretrain_weights = glob.glob(os.path.join(self.pretrain_dir, '*.h5'))        
-            weights_path = [x for x in pretrain_weights if (model_name in x)&('best' in x) ][0]
+            weights_path = [x for x in pretrain_weights if (model_name in x)&('full' not in x) ][0]
             try:
                 base_model=MODEL(weights=weights_path, include_top=False, input_shape=input_shape) 
                 print('imagenet pretrain weight')
