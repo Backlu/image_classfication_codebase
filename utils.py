@@ -11,6 +11,8 @@ from tensorflow.keras.applications.nasnet import preprocess_input as nas_preproc
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mb_preprocess_input
 from tensorflow.keras.applications.mobilenet import preprocess_input as mb_preprocess_input
 
+ensemble_models = ['densenet201', 'densenet169',  'xception','inception_resnet_v2','resnet152v2','resnet101v2']
+
 model_path = {'resnet152v2': 'resnet152v2_weights_tf_dim_ordering_tf_kernels_notop.h5',
               'densenet169':'densenet169_weights_tf_dim_ordering_tf_kernels_notop.h5',
               'densenet201':'densenet201_weights_tf_dim_ordering_tf_kernels_notop.h5',
@@ -66,14 +68,14 @@ model_preprocess ={'densenet169':den_preprocess_input,
               'vgg16': vgg_preprocess_input,
                 }
 
-model_batch_size = {'densenet169':15,
-              'densenet201':9,
-              'densenet121':15,
-             'resnet101':15,
-              'xception':15,
-              'resnet101v2':15,
-              'inception_resnet_v2':15,
-              'resnet152v2':15,
-              'vgg16':15,
+model_batch_size = {'densenet169':32,
+              'densenet201':30,
+              'densenet121':32,                    
+             'resnet101':32,
+              'xception':32,
+              'resnet101v2':32,
+              'inception_resnet_v2':32,
+              'resnet152v2':32,
+              'vgg16':32,
                 }
 
