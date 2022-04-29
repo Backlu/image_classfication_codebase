@@ -20,6 +20,8 @@ from cutmix_keras import CutMixImageDataGenerator
 from utils import *
 import joblib
 from clr_callback import *
+import tensorflow_addons as tfa
+from sklearn.utils import class_weight 
 
 
 class Trainner(object):
@@ -154,7 +156,8 @@ class Trainner(object):
             opt = SGD(learning_rate=init_lr)
 
         model = self.get_model(model_name)
-        model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['categorical_accuracy'])
+        #model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['categorical_accuracy'])
+        model.compile(loss=tfa.losses.SigmoidFocalCrossEntropy(), optimizer=opt, metrics=['categorical_accuracy'])        
         for idx, layer in enumerate(model.layers):
             layer.trainable = True
 
@@ -179,8 +182,13 @@ class Trainner(object):
         elif self.opt=='sgd': 
             callbacks.append(reduce_lr_plateau)
             
+        inv_map = {v: k for k, v in model_cls_map.items()}
+        df['cls'] = df['category_str'].map(lambda x: inv_map[x])
+        class_weights = class_weight.compute_class_weight('balanced',np.unique(df['cls']),df['cls'])
+        class_weights = dict(enumerate(class_weights))
+            
         
-        history = model.fit(dgen_tr, steps_per_epoch=steps_per_epoch, validation_steps=steps_per_epoch_val, epochs=epoch, validation_data=dgen_val, callbacks=callbacks, workers=4, use_multiprocessing=False) 
+        history = model.fit(dgen_tr, steps_per_epoch=steps_per_epoch, validation_steps=steps_per_epoch_val, epochs=epoch, validation_data=dgen_val, callbacks=callbacks, workers=4, use_multiprocessing=True) 
         model.load_weights(best_model_path)
         model.save(final_model_path)
         joblib.dump(model_cls_map, self.cls_map_path)
